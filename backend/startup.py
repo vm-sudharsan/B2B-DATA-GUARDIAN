@@ -9,7 +9,6 @@ REQUIRED_MODELS = [
     "job_title_classifier.pkl",
     "duplicate_detector.pkl",
     "anomaly_detectors.pkl",
-    "correction_sentence_model.pkl",
     "references.pkl",
 ]
 

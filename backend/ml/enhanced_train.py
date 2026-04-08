@@ -29,9 +29,7 @@ class EnhancedJobTitleClassifier:
     ]
     
     def __init__(self):
-        self.sentence_model = SentenceTransformer('all-MiniLM-L6-v2')
         self.tfidf = TfidfVectorizer(max_features=200, ngram_range=(1, 3))
-        # Use GradientBoosting for better accuracy
         self.classifier = GradientBoostingClassifier(
             n_estimators=200,
             learning_rate=0.1,
@@ -159,8 +157,6 @@ class EnhancedJobTitleClassifier:
         # Save models
         joblib.dump(self.tfidf, MODELS_DIR / "job_title_tfidf.pkl")
         joblib.dump(self.classifier, MODELS_DIR / "job_title_classifier.pkl")
-        joblib.dump(self.sentence_model, MODELS_DIR / "sentence_transformer.pkl")
-        
         print(f"✓ Enhanced Job Title Classifier saved to {MODELS_DIR}")
 
 

@@ -26,7 +26,6 @@ class JobTitleClassifier:
     ]
     
     def __init__(self):
-        self.sentence_model = SentenceTransformer('all-MiniLM-L6-v2')
         self.tfidf = TfidfVectorizer(max_features=100, ngram_range=(1, 2))
         self.classifier = LogisticRegression(max_iter=1000, random_state=42)
         
@@ -116,8 +115,6 @@ class JobTitleClassifier:
         # Save models
         joblib.dump(self.tfidf, MODELS_DIR / "job_title_tfidf.pkl")
         joblib.dump(self.classifier, MODELS_DIR / "job_title_classifier.pkl")
-        joblib.dump(self.sentence_model, MODELS_DIR / "sentence_transformer.pkl")
-        
         print(f"✓ Job Title Classifier saved to {MODELS_DIR}")
 
 

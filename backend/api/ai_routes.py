@@ -64,6 +64,6 @@ async def ai_health_check():
             "job_title_classifier": engine.job_title_classifier is not None,
             "duplicate_detector": engine.duplicate_detector is not None,
             "anomaly_detectors": engine.anomaly_detectors is not None,
-            "faiss_indexes": list(engine.faiss_indexes.keys()),
+            "references": list(engine.references.keys()),
         },
     }
