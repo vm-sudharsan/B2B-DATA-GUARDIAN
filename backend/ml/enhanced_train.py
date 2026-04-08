@@ -8,9 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import classification_report, accuracy_score, f1_score
-from sentence_transformers import SentenceTransformer
 import joblib
-import faiss
 from typing import List, Tuple, Dict
 import re
 

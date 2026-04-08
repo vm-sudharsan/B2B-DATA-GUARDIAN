@@ -1,8 +1,5 @@
-"""
-ML Training Pipeline for Data Quality AI Models
-Trains all models and saves artifacts to /models folder
-"""
 from pathlib import Path
+import sys
 import json
 import numpy as np
 import pandas as pd
@@ -11,9 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
-from sentence_transformers import SentenceTransformer
 import joblib
-import faiss
 from typing import List, Tuple, Dict
 import re
 
@@ -287,62 +282,32 @@ class AnomalyDetector:
 
 
 class CorrectionSuggester:
-    """MODEL 4: Correction Suggestion using Embeddings + FAISS"""
-    
+    """MODEL 4: Correction Suggestion using rapidfuzz (memory-efficient)"""
+
     def __init__(self):
-        self.sentence_model = SentenceTransformer('all-MiniLM-L6-v2')
-        self.indexes = {}
         self.references = {}
-        
-    def build_index(self, reference_list: List[str], name: str):
-        """Build FAISS index for reference data"""
-        if not reference_list:
-            return
-        
-        # Generate embeddings
-        embeddings = self.sentence_model.encode(reference_list, convert_to_numpy=True)
-        
-        # Build FAISS index
-        dimension = embeddings.shape[1]
-        index = faiss.IndexFlatL2(dimension)
-        index.add(embeddings.astype('float32'))
-        
-        self.indexes[name] = index
-        self.references[name] = reference_list
-        
+
     def train(self):
-        """Build embedding indexes for all reference data"""
-        print("Building Embedding Indexes...")
-        
-        # Load reference data
+        print("Building Reference Lists...")
+
         countries_path = CACHE_DIR / "countries.json"
         industries_path = CACHE_DIR / "industries.json"
-        
+
         if countries_path.exists():
             with open(countries_path) as f:
-                countries = json.load(f)
-            self.build_index(countries, "countries")
-        
+                self.references["countries"] = json.load(f)
+
         if industries_path.exists():
             with open(industries_path) as f:
-                industries = json.load(f)
-            self.build_index(industries, "industries")
-        
-        # Email domains
-        email_domains = [
+                self.references["industries"] = json.load(f)
+
+        self.references["email_domains"] = [
             "gmail.com", "yahoo.com", "outlook.com", "hotmail.com",
-            "icloud.com", "protonmail.com", "aol.com", "mail.com"
+            "icloud.com", "protonmail.com", "aol.com", "mail.com",
         ]
-        self.build_index(email_domains, "email_domains")
-        
-        # Save indexes
-        for name, index in self.indexes.items():
-            faiss.write_index(index, str(MODELS_DIR / f"faiss_{name}.index"))
-        
+
         joblib.dump(self.references, MODELS_DIR / "references.pkl")
-        joblib.dump(self.sentence_model, MODELS_DIR / "correction_sentence_model.pkl")
-        
-        print(f"✓ Embedding Indexes saved to {MODELS_DIR}")
+        print(f"✓ Reference Lists saved to {MODELS_DIR}")
 
 
 def train_all_models():
