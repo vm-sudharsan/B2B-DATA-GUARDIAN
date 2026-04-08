@@ -1,8 +1,5 @@
-"""
-Enhanced ML Training Pipeline for B2B Customer Data
-Optimized for real-world business scenarios
-"""
 from pathlib import Path
+import sys
 import json
 import numpy as np
 import pandas as pd
@@ -18,6 +15,9 @@ from typing import List, Tuple, Dict
 import re
 
 MODELS_DIR = Path(__file__).parent.parent / "models"
+CACHE_DIR = Path(__file__).parent.parent / "cache"
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
 CACHE_DIR = Path(__file__).parent.parent / "cache"
 MODELS_DIR.mkdir(exist_ok=True)
 
@@ -308,8 +308,7 @@ def train_all_enhanced_models():
         duplicate_detector = EnhancedDuplicateDetector()
         duplicate_detector.train(df)
     
-    # Import and train other models from original train.py
-    from train import AnomalyDetector, CorrectionSuggester
+    from ml.train import AnomalyDetector, CorrectionSuggester
     
     # Train Model 3: Anomaly Detector
     if not df.empty:

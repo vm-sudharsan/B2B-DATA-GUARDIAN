@@ -1,8 +1,7 @@
-"""
-Startup script: trains ML models if not already present.
-Called automatically before the server starts on Render.
-"""
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
 
 MODELS_DIR = Path(__file__).parent / "models"
 REQUIRED_MODELS = [
@@ -14,8 +13,10 @@ REQUIRED_MODELS = [
     "references.pkl",
 ]
 
+
 def models_exist() -> bool:
     return all((MODELS_DIR / m).exists() for m in REQUIRED_MODELS)
+
 
 if __name__ == "__main__":
     if not models_exist():
