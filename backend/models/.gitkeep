@@ -1,0 +1,8 @@
+This folder holds trained ML model files (.pkl, .index).
+These are excluded from git due to file size.
+
+To generate them, run from the project root:
+  Windows: train_enhanced_models.bat
+  Linux:   bash train_models.sh
+
+On Render: add a build step or pre-load models via a startup script.
